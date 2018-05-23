@@ -10,6 +10,12 @@ import com.ibm.disni.rdma.RdmaActiveEndpointGroup;
 
 import common.Request;
 
+/**
+ * 
+ * This class models the proxy.
+ * Parts of it has been written following DiSNI's examples at https://github.com/zrlio/disni
+ *
+ */
 public class RDMAClient{
 	
 	RdmaActiveEndpointGroup<ClientEndpoint> endpointGroup;
@@ -17,6 +23,14 @@ public class RDMAClient{
 	private ServerSocket serverSocket;
 	private BlockingQueue<Request> requestQueue;
 	
+	/**
+	 * @param rdmaAddress
+	 * @param portInput
+	 * @throws Exception
+	 * 
+	 * Sets up the proxy by creating a custom endpoint and connecting the proxy to the sever.
+	 * Also creates and starts the RequestHandler thread.
+	 */
 	private RDMAClient(String rdmaAddress, int portInput) throws Exception{
 		requestQueue = new LinkedBlockingQueue<Request>();
 		
@@ -35,6 +49,11 @@ public class RDMAClient{
 	}
 
 	
+	/**
+	 * @throws Exception
+	 * 
+	 * Waits for a client connection and starts the handler.
+	 */
 	private void run() throws Exception {		
 
 		while(true) {

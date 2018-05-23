@@ -14,6 +14,12 @@ import com.ibm.disni.rdma.verbs.IbvSge;
 import com.ibm.disni.rdma.verbs.IbvWC;
 import com.ibm.disni.rdma.verbs.RdmaCmId;
 
+/**
+ *
+ * This class represents the custom endpoint.
+ * It has been written following DiSNI's examples at https://github.com/zrlio/disni
+ * 
+ */
 public class CustomEndpoint extends RdmaActiveEndpoint {
 	
 	protected static final byte RESOURCE_FOUND = 1;
@@ -64,6 +70,13 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
 
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see com.ibm.disni.rdma.RdmaEndpoint#init()
+	 * 
+	 * This method allocates buffers needed to receive/send messages and data from/to the proxy.
+	 * It also takes care of setting up the scatter/gather elements responsible of describing local buffers
+	 */
 	@Override
 	public void init() throws IOException {
 		super.init();
@@ -92,6 +105,14 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
 	}
 	
 
+	/**
+	 * Scatter/gather element set up
+	 * 
+	 * @param ibvSge: the SG element to set up
+	 * @param ibvMr: the memory region registered with the RDMA device
+	 * 
+	 * @return: the SG element fater setting it up
+	 */
 	protected IbvSge setUp_ibvSge(IbvSge ibvSge, IbvMr ibvMr) {
 		ibvSge.setAddr(ibvMr.getAddr());
 		ibvSge.setLength(ibvMr.getLength());
@@ -99,6 +120,12 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
 		return ibvSge;
 	}
 		
+	/**
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * Sets the receive work request and wait for confirmation  
+	 */
 	public void receive() throws IOException, InterruptedException{
 		
 		IbvRecvWR recvWR = new IbvRecvWR();
@@ -112,12 +139,14 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
         this.wcEvents.take();
 	}
 	
-		@Override
+	@Override
 	public void dispatchCqEvent(IbvWC ibvWC) throws IOException {
 		wcEvents.add(ibvWC);
 	}
 
 
+	/*---------- GETTERS ----------*/
+	
 	public ArrayBlockingQueue<IbvWC> getWcEvents() {
 		return wcEvents;
 	}
@@ -153,6 +182,9 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
 		return dataMr;
 	}
 	
+	/*------------------------------*/
+	
+
 	public void close() throws IOException, InterruptedException {
 		super.close();
 		deregisterMemory(this.sendMr);

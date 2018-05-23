@@ -13,6 +13,12 @@ import com.ibm.disni.rdma.verbs.RdmaCmId;
 
 import common.CustomEndpoint;
 
+/**
+ * 
+ * This class represents the server endpoint.
+ * Parts of it has been written following DiSNI's examples at https://github.com/zrlio/disni
+ *
+ */
 public class ServerEndpoint extends CustomEndpoint {
 
 	private static final String IMAGE_PATH = RDMAServer.resource_path + "/network.png";
@@ -23,6 +29,13 @@ public class ServerEndpoint extends CustomEndpoint {
 		super(group, idPriv, serverSide);
 	}
 	
+	/**
+	 * @return the name of the requested resource
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * Receives the name of the requested resource and returns it as a String
+	 */
 	public String receiveRequest() throws IOException, InterruptedException {
 		
 		this.receive();
@@ -35,6 +48,13 @@ public class ServerEndpoint extends CustomEndpoint {
 		
 	}
 	
+	/**
+	 * @param requestedResource: the resource requested by the client
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * Fetches the requested resource and sends it back to the proxy
+	 */
 	public void send(String requestedResource) throws IOException, InterruptedException {
 		this.dataBuf.clear();
 		this.sendBuf.clear();
@@ -70,6 +90,11 @@ public class ServerEndpoint extends CustomEndpoint {
 		
 	}
 
+	/**
+	 * @throws IOException
+	 * 
+	 * Sets up the descriptor in order to send the response back to the proxy.
+	 */
 	private void descriptorSetup() throws IOException {
 		IbvSendWR sendWRFound = new IbvSendWR();
 		sendWRFound.setWr_id(this.wrId);
@@ -83,6 +108,11 @@ public class ServerEndpoint extends CustomEndpoint {
 		this.postSend(wrListFound).execute().free();
 	}
 	
+	/**
+	 * @param resourceFound: boolean signaling whether the resource has been found or not
+	 * 
+	 * Sets up the send buffer depending on whether the requested resource has been found or not
+	 */
 	private void sendBufferSetup(boolean resourceFound) {
 		
 		if (resourceFound) {

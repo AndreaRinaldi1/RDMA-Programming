@@ -11,6 +11,12 @@ import com.ibm.disni.rdma.verbs.SVCPostSend;
 
 import common.CustomEndpoint;
 
+/**
+ * 
+ * Class modeling the client endpoint.
+ * This class has been written following DiSNI's examples at https://github.com/zrlio/disni
+ *
+ */
 public class ClientEndpoint extends CustomEndpoint{
 
 	public 	ClientEndpoint(RdmaActiveEndpointGroup<? extends CustomEndpoint> endpointGroup, RdmaCmId idPriv, boolean serverSide) throws IOException {
@@ -18,6 +24,13 @@ public class ClientEndpoint extends CustomEndpoint{
 	}
 	
 	
+	/**
+	 * @param request: request to be sent to the server
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * Send the client's request to the server
+	 */
 	public void send(String request) throws IOException, InterruptedException{
 		sendBuf.putInt(request.length());
         sendBuf.asCharBuffer().put(request);
@@ -35,6 +48,17 @@ public class ClientEndpoint extends CustomEndpoint{
         this.wcEvents.take();
 
 	}
+	
+	/**
+	 * @param addr
+	 * @param length
+	 * @param lkey
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * Read the response coming from the server
+	 */
 	private byte[] read(long addr, int length, int lkey) throws IOException, InterruptedException{
 
 		IbvSendWR sendWR = new IbvSendWR();
@@ -58,6 +82,14 @@ public class ClientEndpoint extends CustomEndpoint{
         return content;
 	}
 
+	/**
+	 * @return: the response from the server
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * Return the response from the client if any, or an empty response if
+	 * the resource has not been found.
+	 */
 	public byte[] receiveData() throws IOException, InterruptedException {
 		receive();
 		
@@ -75,3 +107,4 @@ public class ClientEndpoint extends CustomEndpoint{
         }
 	}
 }
+

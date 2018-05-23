@@ -6,12 +6,26 @@ import com.ibm.disni.rdma.RdmaServerEndpoint;
 import java.io.IOException;
 import java.net.URI;
 
+/**
+ * 
+ * This class models the Server.
+ * Parts of it has been written following DiSNI's examples at https://github.com/zrlio/disni
+ *
+ */
 public class RDMAServer {
 
 	private RdmaActiveEndpointGroup<ServerEndpoint> endpointGroup;
 	private RdmaServerEndpoint<ServerEndpoint> serverEndpoint;
 	public static String resource_path;
 	
+	/**
+	 * @param addr: the address to bind the server with
+	 * @param resource_path: path to the resource
+	 * @throws Exception
+	 * 
+	 * Creates an endpoint group and an endpoint server and binds it to the address past by argument
+	 * to the command line
+	 */
 	public RDMAServer(String addr, String resource_path) throws Exception {
 		RDMAServer.resource_path = resource_path;
 		this.endpointGroup = new RdmaActiveEndpointGroup<ServerEndpoint>(1000, false, 128, 4, 128);
@@ -27,6 +41,12 @@ public class RDMAServer {
 	}
 	
 	
+	/**
+	 * 
+	 * Waits for a client to connect. When the connection has been established,
+	 * the server gets the name of the requested resource, fetches it and sends it back
+	 * to the client.
+	 */
 	public void run() {
 		ServerEndpoint endpoint;
 		try {

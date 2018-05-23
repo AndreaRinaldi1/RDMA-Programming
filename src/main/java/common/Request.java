@@ -2,6 +2,11 @@ package common;
 
 import java.net.Socket;
 
+/**
+ * 
+ * Class representing a request.
+ *
+ */
 public class Request {
 	public Socket socket;
 	public String request;
