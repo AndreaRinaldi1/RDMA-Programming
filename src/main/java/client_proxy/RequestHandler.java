@@ -38,7 +38,8 @@ public class RequestHandler implements Runnable {
 					try {
 						this.endpoint.send(m.group(1));
 						System.out.println("Request sent to the server");
-						byte[] response = this.endpoint.receiveData();
+						byte[] response = this.endpoint.receive();
+						
 						if(response.length >0) {
 							found(requestParts[2], response, request.socket.getOutputStream());
 						} else {

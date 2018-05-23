@@ -1,9 +1,8 @@
 package client_proxy;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
-import java.util.List;
-
 import com.ibm.disni.rdma.RdmaActiveEndpointGroup;
 import com.ibm.disni.rdma.verbs.IbvSendWR;
 import com.ibm.disni.rdma.verbs.RdmaCmId;
@@ -19,20 +18,14 @@ public class ClientEndpoint extends CustomEndpoint{
 	
 	
 	public void send(String request) throws IOException, InterruptedException{
-		sendBuf.putInt(request.length());
-        sendBuf.asCharBuffer().put(request);
+		this.getSendBuf().putInt(request.length());
+		this.getSendBuf().asCharBuffer().put(request);
         sendBuf.clear();
 
-        IbvSendWR sendWR = new IbvSendWR();
-        sendWR.setWr_id(wrId);
-        sendWR.setSg_list(sgeListSend);
-        sendWR.setOpcode(IbvSendWR.IBV_WR_SEND);
-        sendWR.setSend_flags(IbvSendWR.IBV_SEND_SIGNALED);
-        List<IbvSendWR> wrList = new LinkedList<>();
-        wrList.add(sendWR);
-
-        this.postSend(wrList).execute().free();
-        this.wcEvents.take();
+        SVCPostSend postSend = this.postSend(this.getWrList_send());
+        postSend.getWrMod(0).setWr_id(4444);
+        postSend.execute().free();
+        this.getWcEvents().take();
 
 	}
 	private byte[] read(long addr, int length, int lkey) throws IOException, InterruptedException{
@@ -48,9 +41,10 @@ public class ClientEndpoint extends CustomEndpoint{
         LinkedList<IbvSendWR> wrList = new LinkedList<>();
         wrList.add(sendWR);
         SVCPostSend send = postSend(wrList);
-        send.execute().free();
-        this.wcEvents.take();
+        send.execute();
+        this.getWcEvents().take();
 
+        ByteBuffer dataBuf = this.getDataBuf();
         dataBuf.clear();
         byte[] content = new byte[length];
         dataBuf.get(content);
@@ -58,9 +52,11 @@ public class ClientEndpoint extends CustomEndpoint{
         return content;
 	}
 
-	public byte[] receiveData() throws IOException, InterruptedException {
-		receive();
-		
+	public byte[] receive() throws IOException, InterruptedException {
+		this.postRecv(this.getWrList_recv()).execute().free();
+        this.getWcEvents().take();
+        
+        recvBuf = this.getRecvBuf();
 		recvBuf.clear();
         byte status = recvBuf.get();
 
@@ -68,7 +64,7 @@ public class ClientEndpoint extends CustomEndpoint{
             long addr = recvBuf.getLong();
             int length = recvBuf.getInt();
             int lkey = recvBuf.getInt();
-
+            recvBuf.clear();
             return read(addr, length, lkey);
         } else {
             return new byte[0];

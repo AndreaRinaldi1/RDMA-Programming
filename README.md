@@ -23,7 +23,7 @@ In case the Server application is shut down, the client Proxy replies to the cli
 
 2. Run the server with the command: `java -Djava.library.path=/usr/local/lib -cp target/rdma-1.0-SNAPSHOT.jar:lib/disni-1.0-jar-with-dependencies.jar:lib/disni-1.0-jar-with-dependencies.jar server.RDMAServer rdma://10.0.2.15:8080 src/main/resources`
 
-3. Run the Client Proxy with the command: `java -Djava.library.path=/usrocal/lib -cp target/rdma-1.0-SNAPSHOT.jar:lib/disni-1.0-jar-with-dependencies.jar:lib/disni-1.0-jar-with-dependencies.jar client_proxy.RDMAClient rdma://10.0.2.15:8080 8070`
+3. Run the Client Proxy with the command: `java -Djava.library.path=/usr/local/lib -cp target/rdma-1.0-SNAPSHOT.jar:lib/disni-1.0-jar-with-dependencies.jar:lib/disni-1.0-jar-with-dependencies.jar client_proxy.RDMAClient rdma://10.0.2.15:8080 8070`
 
 4. Submit requests from one or more clients, e.g.:
 * with curl, run the command: `curl -x 127.0.0.1:8070 www.rdmawebpage.com`

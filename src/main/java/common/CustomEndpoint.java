@@ -61,7 +61,6 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
 		this.wrListRecv = new LinkedList<IbvRecvWR>();
 				
 		this.wcEvents = new ArrayBlockingQueue<>(10);	
-
 	}
 	
 	@Override
@@ -87,6 +86,13 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
         recvWR.setWr_id(wrId++);
         recvWR.setSg_list(sgeListRecv);
         wrListRecv.add(recvWR);
+        
+        sendWR = new IbvSendWR();
+        sendWR.setWr_id(wrId++);
+        sendWR.setSg_list(sgeListSend);
+        sendWR.setOpcode(IbvSendWR.IBV_WR_SEND);
+		sendWR.setSend_flags(IbvSendWR.IBV_SEND_SIGNALED);
+        wrListSend.add(sendWR);
 		
 		this.postRecv(wrListRecv).execute().free();
 	}
@@ -98,21 +104,8 @@ public class CustomEndpoint extends RdmaActiveEndpoint {
 		ibvSge.setLkey(ibvMr.getLkey());
 		return ibvSge;
 	}
-		
-	public void receive() throws IOException, InterruptedException{
-		
-		IbvRecvWR recvWR = new IbvRecvWR();
-        recvWR.setWr_id(wrId++);
-        recvWR.setSg_list(sgeListRecv);
-
-        LinkedList<IbvRecvWR> wrList = new LinkedList<>();
-        wrList.add(recvWR);
-
-        this.postRecv(wrList).execute().free();
-        this.wcEvents.take();
-	}
 	
-		@Override
+	@Override
 	public void dispatchCqEvent(IbvWC ibvWC) throws IOException {
 		wcEvents.add(ibvWC);
 	}
