@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /home/student/assignment8/src/main/java/server/RDMAServer.java
 /home/student/assignment8/src/main/java/client_proxy/ClientEndpoint.java
 /home/student/assignment8/src/main/java/client_proxy/RequestHandler.java
@@ -8,3 +9,15 @@
 /home/student/assignment8/src/main/java/client_proxy/ClientHandler.java
 /home/student/assignment8/src/main/java/server/ServerEndpoint.java
 /home/student/assignment8/src/main/java/client_proxy/RDMAClient.java
+=======
+/home/student/Desktop/assignment8/src/main/java/client_proxy/ClientEndpoint.java
+/home/student/Desktop/assignment8/src/main/java/client_proxy/RequestHandler.java
+/home/student/Desktop/assignment8/src/main/java/client_proxy/RDMAClient.java
+/home/student/Desktop/assignment8/src/main/java/common/Request.java
+/home/student/Desktop/assignment8/src/main/java/server/RDMAServer.java
+/home/student/Desktop/assignment8/src/main/java/server/ServerEndpoint.java
+/home/student/Desktop/assignment8/src/main/java/server/ServerEndpointFactory.java
+/home/student/Desktop/assignment8/src/main/java/client_proxy/ClientHandler.java
+/home/student/Desktop/assignment8/src/main/java/client_proxy/ClientEndpointFactory.java
+/home/student/Desktop/assignment8/src/main/java/common/CustomEndpoint.java
+>>>>>>> 6c76a4a32fe587612ea000e75c6f736bc6ffe0ed

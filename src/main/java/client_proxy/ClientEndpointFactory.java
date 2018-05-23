@@ -6,6 +6,11 @@ import com.ibm.disni.rdma.RdmaActiveEndpointGroup;
 import com.ibm.disni.rdma.RdmaEndpointFactory;
 import com.ibm.disni.rdma.verbs.RdmaCmId;
 
+/**
+*
+* This class has been written following DiSNI's examples at https://github.com/zrlio/disni
+* 
+*/
 public class ClientEndpointFactory implements RdmaEndpointFactory<ClientEndpoint>{
 	
 	private RdmaActiveEndpointGroup<ClientEndpoint> endpointGroup;

@@ -8,6 +8,12 @@ import java.util.concurrent.BlockingQueue;
 
 import common.Request;
 
+
+/**
+ * 
+ * This class handles client requests.
+ *
+ */
 public class ClientHandler implements Runnable{
 	private Socket socket;
     private BufferedReader input;
@@ -21,6 +27,12 @@ public class ClientHandler implements Runnable{
     }
     
     
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 * 
+	 * Reads client's request and adds it to the queue.
+	 * Also closes the socket when the client has disconnected.
+	 */
 	@Override
 	public void run(){
 		try {

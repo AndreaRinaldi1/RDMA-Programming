@@ -10,6 +10,12 @@ import com.ibm.disni.rdma.RdmaActiveEndpointGroup;
 
 import common.Request;
 
+
+/**
+ * 
+ * This class models the handling of different types of request
+ *
+ */
 public class RequestHandler implements Runnable {
     private BlockingQueue<Request> requestQueue;
 	private ClientEndpoint endpoint;
@@ -22,6 +28,12 @@ public class RequestHandler implements Runnable {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 * 
+	 * Handles client's request depending on whether the client is requesting www.rdmawebpage.com or not.
+	 * If it is the case, sends the request to the server, otherwise sends an error message.
+	 */
 	@Override
 	public void run() {
 		try{
@@ -68,6 +80,14 @@ public class RequestHandler implements Runnable {
 		}
 	}
 	
+	/**
+	 * @param protocol
+	 * @param content
+	 * @param output
+	 * @throws IOException
+	 * 
+	 * If the requested resource has been found, sends it to the client
+	 */
 	private void found(String protocol, byte[] content, OutputStream output) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append(protocol + " 200 OK\n");
@@ -80,6 +100,13 @@ public class RequestHandler implements Runnable {
 		output.flush();
 	}
 	
+	/**
+	 * @param protocol
+	 * @param output
+	 * @throws IOException
+	 * 
+	 * If no resource found, sends error message
+	 */
 	private void notFound(String protocol, OutputStream output) throws IOException {
 		String response = "Page Not Found";
 		StringBuilder sb = new StringBuilder();
@@ -93,6 +120,13 @@ public class RequestHandler implements Runnable {
 		output.flush();
 	}
 	
+	/**
+	 * @param protocol
+	 * @param output
+	 * @throws IOException
+	 * 
+	 * This method handles gateway timeout events, sending the corresponding error message
+	 */
 	private void gatewayTimeout(String protocol, OutputStream output) throws IOException {
 		String response = "Gateway Timeout";
 		StringBuilder sb = new StringBuilder();
